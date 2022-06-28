@@ -193,17 +193,6 @@ function unloadartwork(){
 var controls;
 //CAMERA CONTROLS
 
-//VR test from three.js docs https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content 
-function SetVRcontrolmode(){
-    document.body.appendChild( VRButton.createButton( renderer ) );
-    renderer.xr.enabled = true;
-    renderer.setAnimationLoop( function () {
-    
-            renderer.render( scene, camera );
-
-    } );
-}
-
 //Orbit
 function SetOrbitControlsSettings() {
     var camera_posx=artworklist[currentartwork][1];
