@@ -173,7 +173,7 @@ console.log("current artwork:"+currentartwork);
 var loadedartwork;
 
 function loadartwork(){
-    loader.load("/3D_models/"+ artworklist[currentartwork][0], function ( gltf ) {
+    loader.load("./3D_models/"+ artworklist[currentartwork][0], function ( gltf ) {
         loadedartwork = gltf.scene;
         scene.add( loadedartwork );
 
