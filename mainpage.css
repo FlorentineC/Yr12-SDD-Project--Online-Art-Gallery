@@ -1,12 +1,12 @@
 
 @font-face {
     font-family: 'Giaza-Stencil';
-    src:  url('../fonts/Giaza-Stencil/Giaza\ Stencil.ttf') format('truetype');
+    src:  url('/fonts/Giaza-Stencil/Giaza\ Stencil.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Catchy-Mager';
-    src: url('./fonts/Catchy-Mager/CatchyMager-Normal.ttf') format('truetype');
+    src: url('/fonts/Catchy-Mager/CatchyMager-Normal.ttf') format('truetype');
 }
 *{
     overflow-y: hidden;
