@@ -22,7 +22,7 @@ var previewsource;
 function addPreviews(array){
     for (let i=0; i<array.length; i++){
         //subprocess for determining file type
-        previewsource= "/previews/"+ array[i][7];
+        previewsource= "./previews/"+ array[i][7];
         findfiletype(previewsource);
         //creates video and sets src link
         vid = document.createElement(file_type);
@@ -34,7 +34,7 @@ function addPreviews(array){
             //src: https://stackoverflow.com/questions/2932782/global-variables-in-javascript-across-multiple-files
             //stores specific artwork index
             localStorage.setItem('Data', i);
-            window.location.href = "/artwork_page.html";
+            window.location.href = "artwork_page.html";
         }
 
         //video settings with muted settings to work in chrome
