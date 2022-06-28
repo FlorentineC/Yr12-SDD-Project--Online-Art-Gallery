@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    /*overflow-x: hidden;*/
+    /*overflow-y: hidden;*/
+    border: 0;
+}
+.space {
+    display: inline-block;
+    width:20px;
+    height: auto;
+}
+
+/*font face information source https://css-tricks.com/snippets/css/using-font-face-in-css/
+and https://stackoverflow.com/questions/24990554/how-to-include-a-font-ttf-using-css*/
+@font-face {
+    font-family: 'Giaza-Stencil';
+    src:  url('./fonts/Giaza-Stencil/Giaza\ Stencil.ttf') format('truetype');
+  }
+  /* later removed use of font*/
+@font-face {
+    font-family: 'Catchy-Mager';
+    src: url('./fonts/Catchy-Mager/CatchyMager-Normal.ttf') format('truetype');
+}
+*{
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+head {
+    margin: -2%;
+}
+
+body {
+    background-color: black;
+    margin: 0;
+}
+
+
+#title {
+    font-family: 'Giaza-Stencil';
+    position:  absolute;
+    top: 50px;
+    left: 40px;
+	width: 100%;
+	text-align: left;
+	display:block;
+    font-size:50px;
+    color: white;
+}
+
+#description {
+    font-family: Arial, Helvetica, sans-serif;
+    position:absolute;
+    top: 120px;
+    left: 40px;
+
+    height: 200px;
+    width: 30%;
+
+    text-align: left;
+    z-index: 100;
+    display:block;
+    font-size:15px;
+    color: white;
+}
+
+.img {
+    position: absolute;
+    top: 30px;
+    right: 60px;
+    max-width: 20%;
+    max-height: 60%;
+    height: auto;
+} 
+
+#vid{
+    position: absolute;
+    max-width: 20%;
+    max-height: 30%;
+    top: 400px;
+    right: 60px;
+}
+
+/*basically styles all buttons*/
+.button1 {
+    font-size: 20px;
+    padding: 15px;
+    background-color: transparent;
+    border: 2px solid white;
+    color: antiquewhite;
+}
+
+.button_tohide {
+    font-size: 20px;
+    padding: 15px;
+    background-color: transparent;
+    border: 2px solid white;
+    color: antiquewhite;
+}
+
+.topbuttons{
+    position: fixed;
+    right:30px;
+    top:30px;
+}
+
+.bottombuttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    float: right;
+    text-align: center;
+    border: white;
+}
+
+.bottombuttons2{
+    padding: 10px;
+}
+
+.arrow  {
+    position: absolute;
+    font-size: 50px;
+    top:50%;
+    background:none;
+    color: antiquewhite;
+    font-weight: bolder;
+}
+.leftarrow  {
+    left:15px;
+}
+
+.rightarrow {
+    right:15px;
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+</head>
+<link rel="stylesheet" type="text/css" href="style.css">
+<title>Exhibit- Specific Artwork View </title>
+<meta name="description" content="Yr 12 SDD ">
+</head>
+<body>
+<!--Artwork Title and Description-->
+<div class="topbuttons">
+<button id ="id_button_switchmode"class= 'button_tohide'>Perspective</button>
+<button id ="id_button_switchmode2" class="button_tohide">Orbit</button>
+<button id = "id_button_backtomainpage" class="button_tohide">Back</button>
+</div>
+<button id ="id_button_previousartwork"class= 'button_tohide arrow leftarrow'><</button>
+<button id ="id_button_nextartwork"class= 'button_tohide arrow rightarrow'>></button>
+<div class="bottombuttons">
+<button id = "id_button_hide"class="button1">Hide</button>
+<button id = "id_button_autorotate"class="button1">Auto-rotate</button>
+</div>
+
+<p><div id="title"> </div><div id="description"> </div></p>
+
+
+
+<script async src="https://cdn.skypack.dev/three"></script>
+    
+<script type="importmap">
+	{
+		"imports": {
+			"three": "https://cdn.skypack.dev/three@0.132.2/build/three.module.js"
+		}
+	}
+</script>
+
+<script type="module">
+//IMPORTING Three.js from CDN
+import * as THREE from "three";
+import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js";
+import { FirstPersonControls } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/FirstPersonControls.js";
+import Stats from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/libs/stats.module.js";
+import { artworklist } from './artworkInformation.js';
+import { VRButton } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/webxr/VRButton.js';
+
+//SETTING THE SCENE
+//source: https://threejs.org/docs/#manual/en/introduction/Loading-3D-models
+//source: https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
+const scene = new THREE.Scene();
+//perspective camera (FOV, aspect ratio, clipping plane)
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+//ambient light
+const light = new THREE.AmbientLight( "rgb(255, 211, 180)" ,2); // soft white light 0x404040 for white
+scene.add( light );
+
+
+//BUTTONS
+//"Perspective" button
+var button_switchmode = document.getElementById("id_button_switchmode")
+button_switchmode.addEventListener("click", function(){
+    SetFirstPersonControlMode();
+    SetFirstPersonControlsSettings();
+    console.log("updatemode_tofirstperson");
+});
+//"Orbit" button
+var button_switchmode2 = document.getElementById("id_button_switchmode2")
+button_switchmode2.addEventListener("click", function(){
+    SetOrbitControlsSettings();
+});
+//">" or next button
+var button_nextartwork = document.getElementById("id_button_nextartwork")
+button_nextartwork.addEventListener("click", function(){
+    unloadartwork();
+    incrementartworkindex(1);
+    SetOrbitControlsSettings();
+    SetSceneBackground();
+});
+//"<" or previous button
+var button_previousartwork = document.getElementById("id_button_previousartwork")
+button_previousartwork.addEventListener("click", function(){
+    unloadartwork();
+    incrementartworkindex(-1);
+    SetOrbitControlsSettings();
+    SetSceneBackground();
+});
+//"Back" button
+var button_back = document.getElementById("id_button_backtomainpage")
+button_back.addEventListener("click", function(){
+    //further info https://www.w3schools.com/js/js_window_location.asp
+    window.location.href = "index.html";
+});
+
+//"Hide" button
+//switches to Unhide when clicked
+var screen_clear=false;
+var button_hideelements = document.getElementById("id_button_hide");
+button_hideelements.addEventListener("click", function(){
+    if(screen_clear==false){
+        ClearArtworkInformation();
+        //changes visibility to hidden
+        ChangeButtonVisibility("hidden");
+        document.getElementById("id_button_hide").innerHTML= "Unhide";
+        screen_clear=true;
+    }else{
+        LoadArtworkInformation();
+        //changes visibility to visible
+        ChangeButtonVisibility("");
+        document.getElementById("id_button_hide").innerHTML= "Hide";
+        screen_clear=false;
+}});
+
+//"Auto-rotate" button that rotates model around y axis when pressed
+var model_autorotate= false;
+var button_autorotate = document.getElementById("id_button_autorotate")
+button_autorotate.addEventListener("click", function(){
+    if(model_autorotate==false){
+        document.getElementById("id_button_autorotate").innerHTML= "Stop";
+        console.log("model rotating");
+        model_autorotate=true;
+    }else{
+        document.getElementById("id_button_autorotate").innerHTML= "Auto-rotate";
+        model_autorotate=false;
+
+}});
+
+
+function ChangeButtonVisibility(type){
+    //changes the style using HTML DOM source:https://www.w3schools.com/js/js_htmldom_css.asp
+    const button_all= document.getElementsByClassName("button_tohide");
+    for(const buttons of button_all){
+        buttons.style.visibility= type;
+    }
+}
+
+
+
+//RENDER PROPERTIES
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+renderer.gammaOutput = true;
+
+
+//resize window fix
+//source: https://stackoverflow.com/questions/20290402/three-js-resizing-canvas
+window.addEventListener( 'resize', onWindowResize, false );
+function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+var jumps;
+function incrementartworkindex(jumps){
+    currentartwork+=jumps;
+    console.log("next artwork");
+    console.log("current artwork"+currentartwork);
+    loadartwork();
+    LoadArtworkInformation();
+}
+
+
+//LOADING ARTWORK MODELS
+const loader = new GLTFLoader();
+//Artwork Information
+//gets number of artwork clicked from the main page
+//converted to integer using parseInt
+var currentartwork= parseInt(localStorage.getItem("Data"));
+console.log("current artwork:"+currentartwork);
+
+//LOADING ARTWORK
+var loadedartwork;
+
+function loadartwork(){
+    loader.load("/3D_models/"+ artworklist[currentartwork][0], function ( gltf ) {
+        loadedartwork = gltf.scene;
+        scene.add( loadedartwork );
+
+    }, undefined, function ( error ) {
+        //error message in console to indicate error in loading model
+        console.error( error );
+    } );
+}
+loadartwork();
+
+function unloadartwork(){
+    scene.remove(loadedartwork);
+    console.log("unload");
+}
+
+//CONTROLS
+var controls;
+//CAMERA CONTROLS
+
+//VR test from three.js docs https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content 
+function SetVRcontrolmode(){
+    document.body.appendChild( VRButton.createButton( renderer ) );
+    renderer.xr.enabled = true;
+    renderer.setAnimationLoop( function () {
+    
+            renderer.render( scene, camera );
+
+    } );
+}
+
+//Orbit
+function SetOrbitControlsSettings() {
+    var camera_posx=artworklist[currentartwork][1];
+    var camera_posy=artworklist[currentartwork][2];
+    var camera_posz=artworklist[currentartwork][3];
+    camera.position.set(camera_posx,camera_posy,camera_posz);
+    controls = new OrbitControls(camera, renderer.domElement);
+}
+SetOrbitControlsSettings();
+
+//1st POV
+function SetFirstPersonControlMode(){
+    controls = new FirstPersonControls(camera, renderer.domElement);
+}
+
+function SetFirstPersonControlsSettings() {
+    var firstpov = true;
+    console.log("working?");
+    controls = new FirstPersonControls(camera, renderer.domElement);
+    controls.lookSpeed = 0.05;
+    controls.movementSpeed = 12
+    controls.noFly = true;
+    controls.lookVertical = true;
+    controls.constrainVertical = true;
+    controls.verticalMin = 1.0;
+    controls.verticalMax = 2.0;
+    controls.lon = -150;
+    controls.lat = 120;
+    camera.position.set(0,0,0);
+}
+
+//DISPLAY ARTWORK INFORMATION
+//changing HTML elements source: https://www.w3schools.com/js/js_htmldom_html.asp
+function LoadArtworkInformation()   {
+    //artwork title
+    document.getElementById("title").innerHTML = artworklist[currentartwork][4];
+    //artwork description
+    document.getElementById("description").innerHTML = artworklist[currentartwork][5];
+}
+LoadArtworkInformation();
+
+function ClearArtworkInformation(){
+    document.getElementById("title").innerHTML = "";
+    document.getElementById("description").innerHTML = "";
+}
+
+function SetSceneBackground(){
+    //background 
+    //colour https://threejs.org/docs/#api/en/math/Color
+    var bgcolor = new THREE.Color(artworklist[currentartwork][6]);
+    scene.background = new THREE.Color( bgcolor );
+}
+SetSceneBackground();
+
+/*
+//STATS (temporary)
+//source: https://sbcode.net/threejs/stats-panel/
+const stats = Stats();
+document.body.appendChild(stats.dom);
+stats.update(); in animate func
+*/
+var clock = new THREE.Clock();
+
+
+//RENDER
+function animate(){
+    var delta = clock.getDelta();
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+    controls.update(delta);
+    if (model_autorotate==true){
+        loadedartwork.rotation.y+=0.01;
+    }
+    
+}
+animate();
+
+</script>
+</body>
+</html>

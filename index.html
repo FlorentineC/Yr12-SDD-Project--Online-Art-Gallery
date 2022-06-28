@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<head>
+<meta name ="viewport" content="width=device-width, initial-scale=1.0">
+<link rel ="stylesheet" href="mainpage.css">
+<title>Exhibit- Gallery View</title>
+</head>
+<body>
+<div class="heading_main"><p>Gallery</p></div>
+
+<div class="grid_overall">
+    <div class="grid" id="grid1">
+
+    </div>
+</div>
+<script type="module">
+import { artworklist } from './artworkInformation.js';
+
+//DISPLAY PREVIEWS
+//appends multiple videos or images from an array to the page
+var vid;
+var previewsource;
+function addPreviews(array){
+    for (let i=0; i<array.length; i++){
+        //subprocess for determining file type
+        previewsource= "/previews/"+ array[i][7];
+        findfiletype(previewsource);
+        //creates video and sets src link
+        vid = document.createElement(file_type);
+        vid.setAttribute('src',previewsource);
+        
+        //allows user to view specific model when clicking on this specific element
+        vid.onclick= function() {
+            console.log("vid clicked");
+            //src: https://stackoverflow.com/questions/2932782/global-variables-in-javascript-across-multiple-files
+            //stores specific artwork index
+            localStorage.setItem('Data', i);
+            window.location.href = "/artwork_page.html";
+        }
+
+        //video settings with muted settings to work in chrome
+        vid.style.height = "400px";
+        vid.autoplay= true;
+        vid.muted= true;
+        vid.loop=true;
+
+        //appends to page
+        document.getElementById("grid1").appendChild(vid);
+        console.log(vid);
+
+    }
+}
+ 
+
+//CHECK FILE TYPE
+//currently only checks whether the file is an mp4 or a png
+//remember to consider that filenames without their file extension in their name will not work
+//finding file extension solution from https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript
+var file_type;
+var file_extension;
+function findfiletype(previewsource){
+    file_extension = previewsource.split(".").pop();
+    console.log(file_extension);
+    if(file_extension=="mp4"){
+        file_type = "video";
+        console.log("video");
+    }else if(file_extension=="png"){
+        //dunno if I'll include jpg
+        file_type = "img";
+        console.log("image");
+    }else{
+    //error message to indicate that the file is not an PNG or mp4 file type
+    console.error("unsupported file type");
+    }
+}
+addPreviews(artworklist);
+
+
+</script>
+
+</body>
+
+</html>
