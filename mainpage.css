@@ -4,6 +4,7 @@
     src:  url('./fonts/Giaza-Stencil/Giaza\ Stencil.ttf') format('truetype');
 }
 
+/*note: this font was later removed due to lack of legibility and replaced with Arial*/
 @font-face {
     font-family: 'Catchy-Mager';
     src: url('./fonts/Catchy-Mager/CatchyMager-Normal.ttf') format('truetype');
