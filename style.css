@@ -15,12 +15,12 @@
 and https://stackoverflow.com/questions/24990554/how-to-include-a-font-ttf-using-css*/
 @font-face {
     font-family: 'Giaza-Stencil';
-    src:  url('./fonts/Giaza-Stencil/Giaza\ Stencil.ttf') format('truetype');
+    src:  url('/fonts/Giaza-Stencil/Giaza\ Stencil.ttf') format('truetype');
   }
   /* later removed use of font*/
 @font-face {
     font-family: 'Catchy-Mager';
-    src: url('./fonts/Catchy-Mager/CatchyMager-Normal.ttf') format('truetype');
+    src: url('/fonts/Catchy-Mager/CatchyMager-Normal.ttf') format('truetype');
 }
 *{
     overflow-y: hidden;
